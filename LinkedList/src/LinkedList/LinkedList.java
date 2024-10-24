@@ -1,5 +1,6 @@
 package LinkedList;
 
+
 public class LinkedList<T> implements ListInterface<T> {
 
 	private Node firstNode;
@@ -25,6 +26,7 @@ public class LinkedList<T> implements ListInterface<T> {
 			Node newNode = new Node(newEntry);
 			if (newPosition == 1) {
 				newNode.nextNode = firstNode;
+				firstNode = newNode;
 			} else {
 				Node nodeBefore = getNodeAt(newPosition - 1);
 				Node nodeAfter = nodeBefore.nextNode;
@@ -80,7 +82,12 @@ public class LinkedList<T> implements ListInterface<T> {
 	@Override
 	public T[] toArray() {
 		// TODO Auto-generated method stub
-		return null;
+		@SuppressWarnings("unchecked")
+		T[] outArr = (T[])new Object[numOfEntries];
+		for(int i = 1; i<=numOfEntries; i++) {
+			outArr[i-1] = getNodeAt(i).data;
+		}
+		return outArr;
 	}
 
 	@Override
@@ -134,6 +141,12 @@ public class LinkedList<T> implements ListInterface<T> {
 			return currentNode;
 		} else {
 			return null;
+		}
+	}
+	
+	public void displayArr() {
+		for(int i = 0; i< toArray().length; i++) {
+			System.out.println(toArray()[i]);
 		}
 	}
 
