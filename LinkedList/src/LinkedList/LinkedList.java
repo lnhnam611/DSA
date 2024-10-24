@@ -1,83 +1,80 @@
 package LinkedList;
 
-
-
 public class LinkedList<T> implements ListInterface<T> {
-	
-	private Node firstNode;            // Reference to first node of chain
-	private int  numberOfEntries;
 
+	private Node firstNode;
+	private int numOfEntries;
+
+	public LinkedList() {
+		firstNode = null;
+		numOfEntries = 0;
+	}
+	// implement all the method of interface
 	@Override
 	public void add(T newEntry) {
 		// TODO Auto-generated method stub
-		@SuppressWarnings("unchecked")
 		Node newNode = new Node(newEntry);
-		if(isEmpty()) {
-			firstNode = newNode;
-		} else {
-			Node lastNode = (Node) getEntry(numberOfEntries);
-			lastNode.setNextNode(newNode);
-		}
-		
-	}	
-	
-	private Node getNodeAt(int numberOfEntries) {
-		// TODO Auto-generated method stub
-		
-		return null;
+		newNode.nextNode = firstNode;
+		firstNode = newNode;
+		numOfEntries++;
 	}
-
-
-	public LinkedList() {
-		initializeLList();
-	}
-	
-	private void initializeLList() {
-		firstNode = null;
-		numberOfEntries = 0;
-	}
-
 	@Override
 	public void add(int newPosition, T newEntry) {
 		// TODO Auto-generated method stub
-		
+		if (1 <= newPosition && newPosition <= numOfEntries + 1) {
+			Node newNode = new Node(newEntry);
+			if (newPosition == 1) {
+				newNode.nextNode = firstNode;
+			} else {
+				Node nodeBefore = getNodeAt(newPosition - 1);
+				Node nodeAfter = nodeBefore.nextNode;
+				nodeBefore.nextNode = newNode;
+				newNode.nextNode = nodeAfter;
+			}
+			numOfEntries++;
+		} else {
+			throw new IndexOutOfBoundsException("Illegal position given to add operation.");
+		}
 	}
 
 	@Override
 	public T remove(int givenPosition) {
 		// TODO Auto-generated method stub
-		return null;
+
+		if (givenPosition >= 1 && givenPosition <= numOfEntries) {
+			Node removeNode = getNodeAt(givenPosition);
+			Node nodeBefore = getNodeAt(givenPosition - 1);
+			Node nodeAfter = removeNode.nextNode;
+			nodeBefore.nextNode = nodeAfter;
+			return removeNode.data;
+		} else {
+			throw new IndexOutOfBoundsException("Illegal position given to add operation.");
+		}
+
 	}
 
 	@Override
 	public void clear() {
+		firstNode = null;
+		numOfEntries = 0;
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public T replace(int givenPosition, T newEntry) {
 		// TODO Auto-generated method stub
-		return null;
+		getNodeAt(givenPosition).data = newEntry;
+		return getNodeAt(givenPosition).data;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public T getEntry(int givenPosition) {
 		// TODO Auto-generated method stub
-		if((1<=givenPosition) 
-				&& (givenPosition<= numberOfEntries) 
-				&& (firstNode != null)) {
-			Node currentNode = firstNode;
-			for(int i =1; i<givenPosition; i++) {
-				currentNode = currentNode.getNextNode();
-			}
-			return (T) currentNode;
+		if (givenPosition >= 1 && givenPosition <= numOfEntries) {
+			return getNodeAt(givenPosition).data;
+		} else {
+			throw new IndexOutOfBoundsException("Illegal position given to add operation.");
 		}
-		else {
-			return null;
-		}
-		
 	}
 
 	@Override
@@ -95,13 +92,49 @@ public class LinkedList<T> implements ListInterface<T> {
 	@Override
 	public int getLength() {
 		// TODO Auto-generated method stub
-		return 0;
+		return numOfEntries;
 	}
 
 	@Override
 	public boolean isEmpty() {
 		// TODO Auto-generated method stub
-		return numberOfEntries == 0;
+		boolean result;
+		if (numOfEntries == 0) {
+			result = true;
+		} else {
+			result = false;
+		}
+		return result;
+	}
+
+	// private class of Node
+
+	private class Node {
+		private T data;
+		private Node nextNode;
+
+		// constructor
+		private Node(T dataPortion) {
+			this(dataPortion, null);
+		}
+
+		private Node(T dataPortion, Node nextNode) {
+			data = dataPortion;
+			this.nextNode = nextNode;
+		}
+	}
+
+	// support functions
+	private Node getNodeAt(int position) {
+		if ((firstNode != null) && (position <= numOfEntries) && (position >= 1)) {
+			Node currentNode = firstNode;
+			for (int i = 1; i < position; i++) {
+				currentNode = currentNode.nextNode;
+			}
+			return currentNode;
+		} else {
+			return null;
+		}
 	}
 
 }
